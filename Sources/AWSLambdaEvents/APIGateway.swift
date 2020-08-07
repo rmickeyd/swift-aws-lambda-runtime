@@ -35,6 +35,17 @@ public enum APIGateway {
                 public let sourceIp: String?
                 public let accountId: String?
             }
+            
+            public struct Authorizer: Codable {
+                public let principalId: String
+                public let context: [String: String]
+                
+                public init(from decoder: Decoder) throws {
+                    let container = try decoder.container(keyedBy: CodingKeys.self)
+                    self.principalId = try container.decode(String.self, forKey: .principalId)
+                    self.context = try decoder.singleValueContainer().decode(Dictionary<String, String>.self)
+                }
+            }
 
             public let resourceId: String
             public let apiId: String
@@ -47,6 +58,7 @@ public enum APIGateway {
             public let identity: Identity
             public let extendedRequestId: String?
             public let path: String
+            public let authorizer: Authorizer?
         }
 
         public let resource: String
